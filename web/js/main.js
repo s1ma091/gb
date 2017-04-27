@@ -1,8 +1,23 @@
 $(document).ready(function () {
+    console.dir('ua')
+    if (!$.cookie('lang')) {
+        $.cookie('lang', 'en')
+    }
+    $('[name="en"]').click(function () {
+        $.cookie('lang', 'en')
+        location.reload();
+
+    })
+    $('[name="ua"]').click(function () {
+        $.cookie('lang', 'ua')
+        location.reload();
+
+    })
     var els = $('[translatable]');
     if ($.cookie('lang') == 'ua') {
+        console.dir('ua')
         $(function () {
-            $.getJSON('../json/ua.json', function (data) {
+            $.getJSON('json/ua.json', function (data) {
                 Array.prototype.map.call(els, function (element) {
                     if (element.innerText) {
                         element.innerText = data[element.innerText];
@@ -12,12 +27,14 @@ $(document).ready(function () {
                         element.placeholder = data[element.placeholder]
                     }
                     element.style.opacity = 1;
+
+
                 })
             })
         })
     } else if ($.cookie('lang') == 'en') {
         $(function () {
-            $.getJSON('../json/en.json', function (data) {
+            $.getJSON('json/en.json', function (data) {
                 Array.prototype.map.call(els, function (element) {
                     if (element.innerText) {
                         element.innerText = data[element.innerText];
@@ -32,8 +49,8 @@ $(document).ready(function () {
 
         })
     }
-    $("#form").submit(function (e) {
-        if ($("input[name='name']").val() == '') {
+    $("#add-form").submit(function (e) {
+        if ($("#addform-name").val() == '') {
             e.preventDefault();
             $('#name').text('Name required')
         } else {
@@ -45,26 +62,25 @@ $(document).ready(function () {
         } else {
             $('#message').text('')
         }
-        if (!strings_isemail($("input[name='email']").val())) {
+        if (!strings_isemail($("#addform-email").val())) {
             e.preventDefault();
             $('#email').text('Email required')
         } else {
             $('#email').text('')
         }
-        if ($("input[name='captcha']").val() == '') {
+        if ($("#addform-verifycode").val() == '') {
             e.preventDefault();
-            $('#captcha').text('Write letters from image');
+            $('#addform-verifycode').next('.help-block').text('Write letters from image');
         } else {
-            $('#captcha').text('');
+            $('.help-block').text('');
         }
     });
     $('.cancelbtn').click(function () {
         header("Location:index.php")
     })
     $('#login').submit(function (e) {
-        if ($("input[name='uname']'").val() != 'admin' || $("input[name='psw']'").val() != 'admin') {
+        if ($("#loginform-username").val() == '' || $("#loginform-password").val() == '') {
             e.preventDefault();
-            $('.err').text('Name or password is not correct. Try again')
         }
     })
 });
@@ -78,9 +94,8 @@ function strings_isemail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 }
-
 $(".message").keyup(function () {
-    return $("textarea[name='message']").val($(".message").html());
+    return $("#addform-message").val($(".message").html());
 })
 $(".strong").mousedown(function () {
     getSelectEl()
@@ -98,13 +113,14 @@ $(".strike").mousedown(function (element) {
     $(".message").keyup()
 })
 $(".link").mousedown(function () {
+    $('#message').text('')
     getSelectEl()
     if (!isValidUrl(txt)) {
         $('#message').text('Add valid URL')
     } else {
         document.execCommand("createLink", "true", txt);
         $(".message").keyup();
-        $('#message').text('')
+        $('#addform-message').text('')
     }
 })
 

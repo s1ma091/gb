@@ -155,7 +155,7 @@ form:after {
     background-position: 10px -53px !important;
 }
 
-.content form input[type="submit"] {
+.content form button[type="submit"] {
     outline: none;
     background: rgb(254,231,154);
     background: linear-gradient(top, rgba(254,231,154,1) 0%,rgba(254,193,81,1) 100%);
@@ -190,5 +190,13 @@ form:after {
 }
 
 [translatable] {
-    opacity: 1;
+    opacity: 0;
+}
+#loginform-username, #loginform-password, #emailform-email {
+    margin: 0 auto;
+}
+td {
+    padding:10px;
+   max-height: 70px;
+
 }
